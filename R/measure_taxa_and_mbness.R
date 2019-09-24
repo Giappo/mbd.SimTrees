@@ -3,9 +3,13 @@
 #'  a sample of mb-ness (in percentage and absolute).
 #' @author Giovanni Laudanno
 #' @export
-measure_taxa_and_mbness <- function(n_replicates = 1e4) {
+measure_taxa_and_mbness <- function(
+  crown_age = 8,
+  n_replicates = 1e4
+) {
   n_0 <- 2
-  x <- create_mbd_params_table(n_replicates = n_replicates)
+  x <- razzo::create_mbd_params_table(n_replicates = n_replicates)
+  x$crown_age <- crown_age
   x <- x %>% dplyr::distinct()
   percentage_mb_species <- n_mb_species <- n_taxas <- rep(NA, nrow(x))
   for (m in 1:nrow(x)) {

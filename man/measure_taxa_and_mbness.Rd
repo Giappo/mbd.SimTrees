@@ -4,7 +4,7 @@
 \alias{measure_taxa_and_mbness}
 \title{Measure number of taxa and mb-ness for each parameter setting}
 \usage{
-measure_taxa_and_mbness(n_replicates = 10000)
+measure_taxa_and_mbness(crown_age = 8, n_replicates = 10000)
 }
 \value{
 a dataframe with parameter settings, a sample of number of taxa and
