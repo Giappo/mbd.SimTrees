@@ -7,6 +7,27 @@ measure_taxa_and_mbness <- function(
   crown_age = 8,
   n_replicates = 1e4
 ) {
+
+  measure <- NULL; rm(measure)
+
+  # folder structure
+  age_folder <- paste0("crown_age_", crown_age)
+  folder <- file.path(getwd(), "data", age_folder)
+  if (!dir.exists(folder)) {
+    dir.create(folder)
+  }
+  filename <- paste0("measure_taxa_crown_age_", crown_age, ".Rda")
+  if (file.exists(filename)) {
+    load(file.path(folder, filename))
+    prev_n_replicates <- sum(measure$setting == measure$setting[1])
+    if (prev_n_replicates >= n_replicates) {
+      return()
+    } else {
+      file.remove(file.path(folder, filename))
+      rm(measure)
+    }
+  }
+
   n_0 <- 2
   x <- razzo::create_mbd_params_table(n_replicates = n_replicates)
   x$crown_age <- crown_age
@@ -35,7 +56,10 @@ measure_taxa_and_mbness <- function(
   x$percentage_mb_species <- percentage_mb_species
   x$setting <-
     interaction(x$lambda, x$mu, x$nu, x$q, x$crown_age, x$cond, sep = "-")
-  x
+
+  measure <- x
+  save(measure, file = file.path(folder, filename))
+  measure
 }
 
 #' Plot number of taxa and mb-ness for each parameter setting
@@ -49,6 +73,7 @@ plot_taxa_and_mbness <- function() {
   filename <- file.choose()
   testit::assert(file.exists(filename))
   folder <- dirname(filename)
+  load(filename)
 
   df <- measure
   crown_age <- unique(measure$crown_age)
