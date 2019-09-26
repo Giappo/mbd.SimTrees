@@ -4,7 +4,7 @@
 \alias{plot_taxa_and_mbness}
 \title{Plot number of taxa and mb-ness for each parameter setting}
 \usage{
-plot_taxa_and_mbness()
+plot_taxa_and_mbness(crown_age, saveit = TRUE)
 }
 \value{
 plots for all the variables

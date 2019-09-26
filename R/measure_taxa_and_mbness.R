@@ -5,25 +5,28 @@
 #' @export
 measure_taxa_and_mbness <- function(
   crown_age = 8,
-  n_replicates = 1e4
+  n_replicates = 1e4,
+  saveit = TRUE
 ) {
 
   measure <- NULL; rm(measure)
 
   # folder structure
-  age_folder <- paste0("crown_age_", crown_age)
-  folder <- file.path(getwd(), "data", age_folder)
-  if (!dir.exists(folder)) {
-    dir.create(folder)
+  project_folder <- get_pkg_path()
+  data_folder <- file.path(project_folder, "data")
+  age_folder <- file.path(data_folder, paste0("crown_age_", crown_age))
+
+  if (!dir.exists(age_folder)) {
+    dir.create(age_folder)
   }
-  filename <- paste0("measure_taxa_crown_age_", crown_age, ".Rda")
+  filename <- paste0("crown_age=", crown_age, "-measure_taxa.Rdata")
   if (file.exists(filename)) {
-    load(file.path(folder, filename))
+    load(file.path(age_folder, filename))
     prev_n_replicates <- sum(measure$setting == measure$setting[1])
     if (prev_n_replicates >= n_replicates) {
       return()
     } else {
-      file.remove(file.path(folder, filename))
+      file.remove(file.path(age_folder, filename))
       rm(measure)
     }
   }
@@ -58,7 +61,9 @@ measure_taxa_and_mbness <- function(
     interaction(x$lambda, x$mu, x$nu, x$q, x$crown_age, x$cond, sep = "-")
 
   measure <- x
-  save(measure, file = file.path(folder, filename))
+  if (saveit == TRUE) {
+    save(measure, file = file.path(age_folder, filename))
+  }
   measure
 }
 
@@ -66,14 +71,20 @@ measure_taxa_and_mbness <- function(
 #' @return plots for all the variables
 #' @author Giovanni Laudanno
 #' @export
-plot_taxa_and_mbness <- function() {
+plot_taxa_and_mbness <- function(
+  crown_age,
+  saveit = TRUE
+) {
   measure <- NULL; rm(measure)
   x <- NULL; rm(x)
 
-  filename <- file.choose()
-  testit::assert(file.exists(filename))
-  folder <- dirname(filename)
-  load(filename)
+  filename <- paste0("crown_age=", crown_age, "-measure_taxa.Rdata")
+  project_folder <- get_pkg_path()
+  data_folder <- file.path(project_folder, "data")
+  age_folder <- file.path(data_folder, paste0("crown_age_", crown_age))
+  file <- file.path(age_folder, filename)
+  testit::assert(file.exists(file))
+  load(file)
 
   df <- measure
   crown_age <- unique(measure$crown_age)
@@ -156,7 +167,7 @@ plot_taxa_and_mbness <- function() {
         widths = c(1, 16, 2.5),
         heights = c(1, 16, 1)
       )
-      filename_grob <- file.path(folder, paste0(
+      filename_grob <- file.path(age_folder, paste0(
         variable,
         "_plots_mu=",
         mu,
@@ -164,9 +175,12 @@ plot_taxa_and_mbness <- function() {
         crown_age,
         ".png"
       ))
-      cowplot::save_plot(
-        filename = filename_grob, plot = g, base_aspect_ratio = (16 / 9)
-      )
+      if (saveit == TRUE) {
+        cowplot::save_plot(
+          filename = filename_grob, plot = g, base_aspect_ratio = (16 / 9)
+        )
+      }
+      g
     }
   }
 }
