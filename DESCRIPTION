@@ -3,7 +3,8 @@ Title: Use mbd to estimate number of taxa and strength of the mb signal
   in simulated trees
 Version: 0.0.0.9000
 Authors@R: 
-    person("Giovanni", "Laudanno", role = c("aut", "cre"))
+  person("Giovanni", "Laudanno", email = "glaudanno@gmail.com", role = c("aut", "cre"))
+Maintainer: Giovanni Laudanno <glaudanno@gmail.com>
 Description: What the package does (one paragraph).
 License: GPL-3
 Encoding: UTF-8
@@ -18,5 +19,7 @@ Imports:
   razzo,
   rprojroot,
   testit
-Suggests: 
-  testthat    
+Suggests:
+  babette,
+  nLTT,
+  testthat (>= 2.1.0)
