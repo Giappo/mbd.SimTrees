@@ -13,9 +13,23 @@ measure_taxa_and_mbness <- function(
 
   # folder structure
   project_folder <- get_pkg_path()
-  data_folder <- file.path(project_folder, "data")
-  age_folder <- file.path(data_folder, paste0("crown_age_", crown_age))
+  x <- unlist(strsplit(getwd(), .Platform$file.sep))
 
+  if (get_pkg_name() %in% x) {
+    y <- which(x == get_pkg_name())
+    z <- paste0(x[1:y], collapse = .Platform$file.sep)
+    setwd(z)
+  } else {
+    dir.create(get_pkg_name())
+    setwd(get_pkg_name())
+  }
+
+  data_folder <- file.path(project_folder, "data")
+  if (!dir.exists(data_folder)) {
+    dir.create(data_folder)
+  }
+
+  age_folder <- file.path(data_folder, paste0("crown_age_", crown_age))
   if (!dir.exists(age_folder)) {
     dir.create(age_folder)
   }

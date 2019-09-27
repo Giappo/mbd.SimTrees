@@ -27,7 +27,7 @@ plot_taxa_and_mbness <- function(
   settings <- expand.grid(q = qs, nu = nus, mu = mus)
   quant <- 0.95
   bin_factor <- 2.0
-  fontsize <- 14
+  fontsize <- 9
   variables <- names(measure)[8:10]
   jj <- 1
   all_plots <- vector("list")
@@ -41,23 +41,33 @@ plot_taxa_and_mbness <- function(
       q <- settings[i, "q"]
       df1 <- df[df$mu == mu & df$nu == nu & df$q == q, ]
       if (all(df1$x == 0)) {
-        df1$x[1:length(df1$x)] <- 1e-6
+        top_x <- 0.95
+      } else {
+        top_x <- quantile(df1$x, quant)
       }
       plots[[i]] <- ggplot2::ggplot(data = df1, ggplot2::aes(x = x)) +
         ggplot2::geom_histogram(
           data = df1,
-          binwidth = bin_factor * max(df1$x) / sqrt(n_sims)
+          binwidth = bin_factor * top_x / sqrt(n_sims)
         ) +
-        ggplot2::scale_x_continuous() +
-        ggplot2::coord_cartesian(xlim = c(0, quantile(df1$x, quant))) +
+        ggplot2::scale_x_continuous(
+          breaks = round(
+            seq(min(df1$x), top_x, length.out = 5)
+            , digits = 2
+          )
+        ) +
+        ggplot2::coord_cartesian(xlim = c(0, top_x)) +
+        ggplot2::theme(axis.text = ggplot2::element_text(size = fontsize)) +
         ggplot2::theme_bw() +
         ggplot2::xlab(label = variable)
     }
 
-    m <- matrix(1:12, nrow = 3, ncol = 4)
+    n_qs <- length(qs)
+    n_nus <- length(nus)
+    m <- matrix(1:(n_qs * n_nus), nrow = n_qs, ncol = n_nus)
     rownames(m) <- paste0("q=", qs); colnames(m) <- paste0("nu=", nus)
 
-    q_grobs <- vector("list", length(qs))
+    q_grobs <- vector("list", n_qs)
     for (i in seq_along(qs)) {
       q_grobs[[i]] <- grid::textGrob(
         eval(bquote(expression("q = " ~ .(qs[i])))),
@@ -65,7 +75,7 @@ plot_taxa_and_mbness <- function(
         rot = 90
       )
     }
-    nu_grobs <- vector("list", length(nus))
+    nu_grobs <- vector("list", n_nus) #fix this
     for (i in seq_along(nus)) {
       nu_grobs[[i]] <- grid::textGrob(
         bquote(nu ~ "=" ~ .(nus[i])),
@@ -74,12 +84,9 @@ plot_taxa_and_mbness <- function(
       )
     }
 
-    grob_qlabs <- gridExtra::arrangeGrob(
-      q_grobs[[1]], q_grobs[[2]], q_grobs[[3]], ncol = 1
-    )
-    grob_nulabs <- gridExtra::arrangeGrob(
-      nu_grobs[[1]], nu_grobs[[2]], nu_grobs[[3]], nu_grobs[[4]], ncol = 4
-    )
+    grob_qlabs <- do.call(gridExtra::grid.arrange, c(q_grobs, ncol = 1));
+    grob_nulabs <- do.call(gridExtra::grid.arrange, c(nu_grobs, ncol = n_nus));
+
     grob_empty <- grid::textGrob("")
     for (i_mu in seq_along(mus)) {
       mu <- mus[i_mu]
@@ -88,7 +95,7 @@ plot_taxa_and_mbness <- function(
         layout_matrix = m
       )
       grob_legend <- grid::textGrob(
-        bquote(variable, " plots for " ~ mu ~ "=" ~ .(mu)),
+        paste0(variable, " plots for mu = ", mu),
         gp = grid::gpar(fontsize = fontsize),
         rot = 0
       )
@@ -97,8 +104,8 @@ plot_taxa_and_mbness <- function(
         grob_qlabs, grob_plots, grob_empty,
         grob_empty, grob_legend, grob_empty,
         ncol = 3,
-        widths = c(1, 16, 2.5),
-        heights = c(1, 16, 1)
+        widths = c(1, 20, 2.5),
+        heights = c(1, 20, 1)
       )
       plot_filename <- paste0(
         "crown_age=", crown_age,
@@ -109,10 +116,19 @@ plot_taxa_and_mbness <- function(
       filename_grob <- file.path(age_folder, plot_filename)
       if (saveit == TRUE) {
         cowplot::save_plot(
-          filename = filename_grob, plot = g, base_aspect_ratio = (16 / 9)
+          filename = filename_grob,
+          plot = g,
+          base_aspect_ratio = (16 / 9), base_height =
         )
       }
-      all_plots[[jj]] <- g
+      all_plots[[jj]] <- gridExtra::grid.arrange(
+        grob_empty, grob_nulabs, grob_empty,
+        grob_qlabs, grob_plots, grob_empty,
+        grob_empty, grob_legend, grob_empty,
+        ncol = 3,
+        widths = c(1, 16, 2.5),
+        heights = c(1, 16, 1)
+      )
       jj <- jj + 1
     }
   }
