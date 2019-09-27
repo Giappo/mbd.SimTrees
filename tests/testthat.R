@@ -1,4 +1,4 @@
 library(testthat)
-library(razzo.TaxaAndMbness)
+library(mbd.TaxaAndMbness)
 
-test_check("razzo.TaxaAndMbness")
+test_check("mbd.TaxaAndMbness")
