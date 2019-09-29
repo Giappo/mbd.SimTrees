@@ -34,10 +34,10 @@ plot_taxa_and_mbness <- function(
   df <- measure
   read_crown_age <- unique(measure$crown_age)
   testit::assert(crown_age == read_crown_age)
-  n_sims <- nrow(df[df$setting == df$setting[[1]], ])
+  # n_sims <- nrow(df[df$setting == df$setting[[1]], ])
   mus <- unique(df$mu)
-  nus <- unique(df$nu)
-  qs <- unique(df$q)
+  # nus <- unique(df$nu)
+  # qs <- unique(df$q)
 
   variables <- names(measure)[8:10]
   jj <- 1
