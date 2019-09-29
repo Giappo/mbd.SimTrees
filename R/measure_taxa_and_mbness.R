@@ -12,16 +12,14 @@ measure_taxa_and_mbness <- function(
   measure <- NULL; rm(measure)
 
   # folder structure
-  project_folder <- get_pkg_path()
   x <- unlist(strsplit(getwd(), .Platform$file.sep))
-
   if (get_pkg_name() %in% x) {
     y <- which(x == get_pkg_name())
-    z <- paste0(x[1:y], collapse = .Platform$file.sep)
-    setwd(z)
+    project_folder <- paste0(x[1:y], collapse = .Platform$file.sep)
   } else {
-    dir.create(get_pkg_name())
-    setwd(get_pkg_name())
+    home_folder <- paste0(x, collapse = .Platform$file.sep)
+    project_folder <- file.path(home_folder, get_pkg_name())
+    dir.create(project_folder)
   }
 
   data_folder <- file.path(project_folder, "data")
