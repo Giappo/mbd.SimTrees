@@ -4,6 +4,7 @@
 #' @export
 plot_taxa_and_mbness <- function(
   crown_age,
+  bins = 15,
   saveit = TRUE
 ) {
   measure <- NULL; rm(measure)
@@ -50,33 +51,35 @@ plot_taxa_and_mbness <- function(
       split(df2, f = df2$setting, drop = T),
       FUN = function(y) length(unique(y$x))
     )
-    if (any(unlist(z) == 1)) {
-      scales <- "free_y"
-    } else {
-      scales <- "free"
-    }
+    # if (any(unlist(z) == 1)) {
+    #   scales <- "free_y"
+    # } else {
+    #   scales <- "free"
+    # }
+    scales <- "free"
+    quant <- 0.99
 
     for (mu in mus) {
 
-      df1 <- df[df$mu == mu, ]
+      df0 <- df[df$mu == mu, ]
 
       ##### Facet Labels
       # mu
-      mu_values <- unique(df1$mu)
+      mu_values <- unique(df0$mu)
       mu_labels <- paste0("mu==", mu_values) # what you show
       names(mu_labels) <- mu_values # what's in the df
       # nu
-      nu_values <- unique(df1$nu)
+      nu_values <- unique(df0$nu)
       nu_labels <- paste0("nu==", nu_values) # what you show
       names(nu_labels) <- nu_values # what's in the df
       # q
-      q_values <- unique(df1$q)
+      q_values <- unique(df0$q)
       q_labels <- paste0("q==", q_values) # what you show
       names(q_labels) <- q_values # what's in the df
       # nu+q
       # df1$nu_q <- interaction(df1$nu, df1$q, sep = ",")
-      df1$nu_q <- interaction(df1$nu, df1$q, sep = ",")
-      nu_q_values <- unique(df1$nu_q)
+      df0$nu_q <- interaction(df0$nu, df0$q, sep = ",")
+      nu_q_values <- unique(df0$nu_q)
       # nu_q_matrix <- expand.grid(q = q_values, nu = nu_values)
       nu_q_matrix <- expand.grid(nu = nu_values, q = q_values)
       nu_q_labels <- apply(
@@ -85,6 +88,28 @@ plot_taxa_and_mbness <- function(
         FUN = function(x) paste0("nu==", x[1], "~~", "q==", x[2])
       ) # what you show
       names(nu_q_labels) <- nu_q_values # what's in the df
+
+      pippo <- split(x = df0, f = df0$setting)
+      xx <- rep(NA, length(pippo))
+      for (b in seq_along(names(pippo))) {
+        baudo <- names(pippo)[b]
+        pippobaudo <- pippo[[baudo]]
+        if (length(unique(pippobaudo$x)) == 1) {
+          pippo[[baudo]]$x[1] <- 10
+          xx[b] <- max(pippo[[baudo]]$x[1])
+        } else {
+          xx[b] <- quantile(pippobaudo$x, quant)
+        }
+      }
+      for (b in seq_along(names(pippo))) {
+        baudo <- names(pippo)[b]
+        pippobaudo <- pippo[[baudo]]
+        yy <- pippobaudo[pippobaudo$x <= xx[b], ]
+        pippo[[baudo]] <- yy
+      }
+      zz <- do.call("rbind", pippo)
+      rownames(zz) <- NULL
+      df1 <- zz
 
       plot <-
         ggplot2::ggplot(
@@ -95,7 +120,7 @@ plot_taxa_and_mbness <- function(
           # data = df1 %>% dplyr::filter(bin == b),
           # ggplot2::aes(x = df1),
           data = df1,
-          bins = 30
+          bins = bins
         ) +
         # ggplot2::facet_grid(
         ggplot2::facet_wrap(
@@ -116,9 +141,18 @@ plot_taxa_and_mbness <- function(
           # axis.title.x = ggplot2::element_text(variable)
         ) +
         # ggplot2::ggtitle(paste0(variable, " plots for mu = ", mu)) +
-        ggplot2::ggtitle(bquote(mu ~ " = " ~ .(mu))) +
+        ggplot2::ggtitle(
+          label = paste0("Crown age = ", crown_age),
+          subtitle = paste0(
+            # bquote(mu ~ " = " ~ .(mu)),
+            "mu = ", mu,
+            ". Average ", variable, " = ",
+            signif(mean(df1$x), 2)
+          )
+        ) +
         ggplot2::xlab(variable) +
         ggplot2::theme_bw()
+        # ggplot2::coord_cartesian(xlim = c(0, quantile(df1$x, 0.95)))
       plots[[jj]] <- plot
       plot_filename <- paste0(
         "crown_age=", crown_age,
@@ -129,7 +163,9 @@ plot_taxa_and_mbness <- function(
       if (saveit == TRUE) {
         ggplot2::ggsave(
           filename = file.path(age_folder, plot_filename),
-          plot = plot
+          plot = plot,
+          width = 10,
+          height = 10,
         )
       }
       jj <- jj + 1
