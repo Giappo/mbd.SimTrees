@@ -117,8 +117,6 @@ plot_taxa_and_mbness <- function(
         ggplot2::aes(x = x)
       ) +
         ggplot2::geom_histogram(
-          # data = df1 %>% dplyr::filter(bin == b),
-          # ggplot2::aes(x = df1),
           data = df1,
           bins = bins
         ) +
