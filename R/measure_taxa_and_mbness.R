@@ -19,6 +19,8 @@ measure_taxa_and_mbness <- function(
   } else {
     home_folder <- paste0(x, collapse = .Platform$file.sep)
     project_folder <- file.path(home_folder, get_pkg_name())
+  }
+  if (!dir.exists(project_folder)) {
     dir.create(project_folder)
   }
 
