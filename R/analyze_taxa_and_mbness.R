@@ -3,29 +3,24 @@
 #' @author Giovanni Laudanno
 #' @export
 analyze_taxa_and_mbness <- function(
+  lambdas = c(0.2),
+  mus = c(0, 0.1),
+  nus = c(0, 0.5, 1.0, 1.5),
+  qs = c(0.1, 0.15, 0.2),
+  cond = 1,
   crown_age = 8
 ) {
-  filename <- paste0("crown_age=", crown_age, "-measure_taxa.Rdata")
-  x <- unlist(strsplit(getwd(), .Platform$file.sep))
-  if (get_pkg_name() %in% x) {
-    y <- which(x == get_pkg_name())
-    project_folder <- paste0(x[1:y], collapse = .Platform$file.sep)
-  } else {
-    home_folder <- paste0(x, collapse = .Platform$file.sep)
-    project_folder <- file.path(home_folder, get_pkg_name())
-    dir.create(project_folder)
-  }
-  data_folder <- file.path(project_folder, "data")
-  if (!dir.exists(data_folder)) {
-    stop("data_folder does not exists!")
-  }
-  age_folder <- file.path(data_folder, paste0("crown_age_", crown_age))
-  if (!dir.exists(age_folder)) {
-    stop("age_folder does not exists!")
-  }
-  file <- file.path(age_folder, filename)
-  testit::assert(file.exists(file))
-  load(file)
+  full_filename <- get_full_filename(
+    lambdas = lambdas,
+    mus = mus,
+    nus = nus,
+    qs = qs,
+    crown_age = crown_age,
+    cond = cond
+  )
+  file <- full_filename
+  testit::assert(file.exists(full_filename))
+  load(full_filename)
 
   df <- measure
   settings <- levels(df$setting)

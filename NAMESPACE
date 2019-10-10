@@ -2,9 +2,12 @@
 
 export(analyze_taxa_and_mbness)
 export(check_taxa_and_mbness)
+export(create_params_table)
+export(get_full_filename)
 export(get_pkg_name)
 export(get_pkg_path)
 export(max_n_taxa)
 export(measure_taxa_and_mbness)
+export(min_mbness)
 export(min_n_taxa)
 export(plot_taxa_and_mbness)

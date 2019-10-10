@@ -4,7 +4,8 @@
 \alias{analyze_taxa_and_mbness}
 \title{Analyze results}
 \usage{
-analyze_taxa_and_mbness(crown_age = 8)
+analyze_taxa_and_mbness(lambdas = c(0.2), mus = c(0, 0.1), nus = c(0,
+  0.5, 1, 1.5), qs = c(0.1, 0.15, 0.2), cond = 1, crown_age = 8)
 }
 \value{
 List with meaningful measures for each parameter setting

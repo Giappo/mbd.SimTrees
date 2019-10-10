@@ -4,6 +4,11 @@
 #' @author Giovanni Laudanno
 #' @export
 measure_taxa_and_mbness <- function(
+  lambdas = c(0.2),
+  mus = c(0, 0.1),
+  nus = c(0, 0.5, 1.0, 1.5),
+  qs = c(0.1, 0.15, 0.2),
+  cond = 1,
   crown_age = 8,
   n_replicates = 1e4,
   saveit = TRUE
@@ -11,47 +16,40 @@ measure_taxa_and_mbness <- function(
 
   measure <- NULL; rm(measure)
 
-  # folder structure
-  x <- unlist(strsplit(getwd(), .Platform$file.sep))
-  if (get_pkg_name() %in% x) {
-    y <- which(x == get_pkg_name())
-    project_folder <- paste0(x[1:y], collapse = .Platform$file.sep)
-  } else {
-    home_folder <- paste0(x, collapse = .Platform$file.sep)
-    project_folder <- file.path(home_folder, get_pkg_name())
-  }
-  if (!dir.exists(project_folder)) {
-    dir.create(project_folder)
-  }
-
-  data_folder <- file.path(project_folder, "data")
-  if (!dir.exists(data_folder)) {
-    dir.create(data_folder)
-  }
-
-  age_folder <- file.path(data_folder, paste0("crown_age_", crown_age))
-  if (!dir.exists(age_folder)) {
-    dir.create(age_folder)
-  }
-  filename <- paste0("crown_age=", crown_age, "-measure_taxa.Rdata")
-  if (file.exists(filename)) {
-    load(file.path(age_folder, filename))
+  full_filename <- get_full_filename(
+    lambdas = lambdas,
+    mus = mus,
+    nus = nus,
+    qs = qs,
+    crown_age = crown_age,
+    cond = cond
+  )
+  if (file.exists(full_filename)) {
+    load(full_filename)
     prev_n_replicates <- sum(measure$setting == measure$setting[1])
     if (prev_n_replicates >= n_replicates) {
       return()
     } else {
-      file.remove(file.path(age_folder, filename))
+      file.remove(full_filename)
       rm(measure)
     }
   }
 
   n_0 <- 2
-  x <- razzo::create_mbd_params_table(n_replicates = n_replicates)
-  x$crown_age <- crown_age
-  x <- x %>% dplyr::distinct()
-  percentage_mb_species <- n_mb_species <- n_taxas <- rep(NA, nrow(x))
-  for (m in 1:nrow(x)) {
-    pars <- x[m, ]
+  params_table <- create_params_table(
+    lambdas = lambdas,
+    mus = mus,
+    nus = nus,
+    qs = qs,
+    crown_age = crown_age,
+    cond = cond,
+    n_replicates = n_replicates
+  )
+  params_table$crown_age <- crown_age
+  params_table <- params_table %>% dplyr::distinct()
+  percentage_mb_species <- n_mb_species <- n_taxas <- rep(NA, nrow(params_table))
+  for (m in 1:nrow(params_table)) {
+    pars <- params_table[m, ]
     brts <- mbd::mbd_sim(
       pars = c(pars$lambda, pars$mu, pars$nu, pars$q),
       n_0 = n_0,
@@ -68,15 +66,21 @@ measure_taxa_and_mbness <- function(
       is.nan(percentage_mb_species[m])
     ) {stop("NaN produced!")}
   }
-  x$n_taxas <- n_taxas
-  x$n_mb_species <- n_mb_species
-  x$percentage_mb_species <- percentage_mb_species
-  x$setting <-
-    interaction(x$lambda, x$mu, x$nu, x$q, x$crown_age, x$cond, sep = "-")
-
-  measure <- x
+  params_table$n_taxas <- n_taxas
+  params_table$n_mb_species <- n_mb_species
+  params_table$percentage_mb_species <- percentage_mb_species
+  params_table$setting <- droplevels(interaction(
+    params_table$lambda,
+    params_table$mu,
+    params_table$nu,
+    params_table$q,
+    params_table$crown_age,
+    params_table$cond,
+    sep = "-"
+  ))
+  measure <- params_table
   if (saveit == TRUE) {
-    save(measure, file = file.path(age_folder, filename))
+    save(measure, file = full_filename)
   }
   measure
 }
