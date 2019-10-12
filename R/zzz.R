@@ -9,8 +9,7 @@
         "mauricer",
         "babette",
         "mcbette",
-        "pirouette",
-        "razzo"
+        "pirouette"
       ),
       library,
       character.only = TRUE,
