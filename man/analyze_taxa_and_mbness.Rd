@@ -7,6 +7,19 @@
 analyze_taxa_and_mbness(lambdas = c(0.2), mus = c(0, 0.1), nus = c(0,
   0.5, 1, 1.5), qs = c(0.1, 0.15, 0.2), cond = 1, crown_age = 8)
 }
+\arguments{
+\item{lambdas}{per-lineage speciation rate. See \code{\link[mbd]{mbd_sim}}}
+
+\item{mus}{per-species extinction rate. See \code{\link[mbd]{mbd_sim}}}
+
+\item{nus}{the rate at which a multiple-birth specation is triggered.}
+
+\item{qs}{per-species speciation probability in case of occurrance of}
+
+\item{cond}{Conditioning}
+
+\item{crown_age}{The crown age of the tree}
+}
 \value{
 List with meaningful measures for each parameter setting
 }

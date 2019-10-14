@@ -1,4 +1,5 @@
 #' Check results
+#' @inheritParams default_params_doc
 #' @return Check that results will match conditions
 #' @author Giovanni Laudanno
 #' @export

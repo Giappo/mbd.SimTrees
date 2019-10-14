@@ -1,3 +1,5 @@
+#' Create the parameter table to generate simulations
+#' @inheritParams default_params_doc
 #' @export
 create_params_table <- function(
   lambdas = c(0.2),

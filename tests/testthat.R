@@ -1,4 +1,4 @@
 library(testthat)
-library(mbd.TaxaAndMbness)
+library(mbd.SimTrees)
 
-test_check("mbd.TaxaAndMbness")
+test_check("mbd.SimTrees")

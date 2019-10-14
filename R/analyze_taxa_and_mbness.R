@@ -1,4 +1,5 @@
 #' Analyze results
+#' @inheritParams default_params_doc
 #' @return List with meaningful measures for each parameter setting
 #' @author Giovanni Laudanno
 #' @export
@@ -10,6 +11,11 @@ analyze_taxa_and_mbness <- function(
   cond = 1,
   crown_age = 8
 ) {
+  measure <- NULL; rm(measure)
+  median <- NULL; rm(median)
+  quantile <- NULL; rm(quantile)
+  x <- NULL; rm(x)
+
   full_filename <- get_full_filename(
     lambdas = lambdas,
     mus = mus,

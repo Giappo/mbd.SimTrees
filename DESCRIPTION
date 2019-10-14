@@ -1,11 +1,11 @@
-Package: mbd.TaxaAndMbness
+Package: mbd.SimTrees
 Title: Use mbd to estimate number of taxa and strength of the mb signal
   in simulated trees
-Version: 0.0.0.9000
+Version: 0.1
 Authors@R: 
   person("Giovanni", "Laudanno", email = "glaudanno@gmail.com", role = c("aut", "cre"))
 Maintainer: Giovanni Laudanno <glaudanno@gmail.com>
-Description: What the package does (one paragraph).
+Description: Simulates and analyzes mbd trees.
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
@@ -13,11 +13,12 @@ RoxygenNote: 6.1.1
 Imports:
   beastier (>= 2.0.22),
   beautier (>= 2.2.2),
+  dplyr,
+  ggplot2,
   mbd,
   peregrine (>= 0.5),
   pirouette (>= 1.5.1),
   razzo,
-  rprojroot,
   testit
 Suggests:
   babette,

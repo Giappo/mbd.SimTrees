@@ -1,6 +1,7 @@
 #' Measure number of taxa and mb-ness for each parameter setting
 #' @return a dataframe with parameter settings, a sample of number of taxa and
 #'  a sample of mb-ness (in percentage and absolute).
+#' @inheritParams default_params_doc
 #' @author Giovanni Laudanno
 #' @export
 measure_taxa_and_mbness <- function(

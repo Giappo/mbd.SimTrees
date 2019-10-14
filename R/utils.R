@@ -1,35 +1,40 @@
-#' @export
+#' @noRd
 get_pkg_name <- function() {
-  # pkg_name <- basename(get_pkg_path())
-  pkg_name <- "mbd.TaxaAndMbness"
+  pkg_name <- "mbd.SimTrees"
   pkg_name
 }
 
-#' @export
+#' @noRd
 get_pkg_path <- function() {
-  # rprojroot::find_package_root_file()
   list.files(getwd())
 }
 
-#' @export
+#' @noRd
 max_n_taxa <- function() {
   max_n <- 400
   max_n
 }
 
-#' @export
+#' @noRd
 min_n_taxa <- function() {
   min_n <- 5
   min_n
 }
 
-#' @export
+#' @noRd
 min_mbness <- function() {
   min_mbness <- 0.5
   min_mbness
 }
 
-#' @export
+#' @noRd
+to_string2 <- function(
+  var
+) {
+  gsub(x = toString(var), pattern = " ", replacement = "")
+}
+
+#' @noRd
 get_full_filename <- function(
   lambdas = c(0.2),
   mus = c(0, 0.1),
@@ -52,21 +57,21 @@ get_full_filename <- function(
     dir.create(project_folder)
   }
 
-  data_folder <- file.path(project_folder, "data")
+  data_folder <- file.path(project_folder, "inst", "extdata")
   if (!dir.exists(data_folder)) {
     dir.create(data_folder)
   }
 
   parsetting <- paste0(
-    "lambdas=", "[", toString(lambdas), "]",
+    "la=", "[", to_string2(lambdas), "]",
     "-",
-    "mus=", "[", toString(mus), "]",
+    "mu=", "[", to_string2(mus), "]",
     "-",
-    "nus=", "[", toString(nus), "]",
+    "nu=", "[", to_string2(nus), "]",
     "-",
-    "qs=", "[", toString(qs), "]",
+    "q=", "[", to_string2(qs), "]",
     "-",
-    "crown_age=", "[", toString(crown_age), "]"
+    "age=", "[", to_string2(crown_age), "]"
   )
   parsetting <- gsub(parsetting, pattern = " ", replacement = "")
   parsetting_folder <- file.path(data_folder, parsetting)
@@ -74,9 +79,7 @@ get_full_filename <- function(
     dir.create(parsetting_folder)
   }
   filename <- paste0(
-    "measure_taxa",
-    "-",
-    parsetting,
+    "result",
     ".Rdata"
   )
   full_filename <- file.path(parsetting_folder, filename)

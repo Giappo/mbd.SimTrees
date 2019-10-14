@@ -1,4 +1,5 @@
 #' Plot number of taxa and mb-ness for each parameter setting
+#' @inheritParams default_params_doc
 #' @return plots for all the variables
 #' @author Giovanni Laudanno
 #' @export
@@ -13,6 +14,8 @@ plot_taxa_and_mbness <- function(
   saveit = TRUE
 ) {
   measure <- NULL; rm(measure)
+  median <- NULL; rm(median)
+  quantile <- NULL; rm(quantile)
   x <- NULL; rm(x)
 
   full_filename <- get_full_filename(
@@ -144,8 +147,6 @@ plot_taxa_and_mbness <- function(
         # ggplot2::coord_cartesian(xlim = c(0, quantile(df1$x, 0.95)))
       plots[[jj]] <- plot
       plot_filename <- paste0(
-        "crown_age=", crown_age,
-        "-",
         variable, "_plots-mu=", mu,
         ".png"
       )
