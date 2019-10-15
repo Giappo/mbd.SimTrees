@@ -63,15 +63,15 @@ get_full_filename <- function(
   }
 
   parsetting <- paste0(
-    "la=", "[", to_string2(lambdas), "]",
+    "la=", to_string2(lambdas),
     "-",
-    "mu=", "[", to_string2(mus), "]",
+    "mu=", to_string2(mus),
     "-",
-    "nu=", "[", to_string2(nus), "]",
+    "nu=", to_string2(nus),
     "-",
-    "q=", "[", to_string2(qs), "]",
+    "q=", to_string2(qs),
     "-",
-    "age=", "[", to_string2(crown_age), "]"
+    "age=", to_string2(crown_age)
   )
   parsetting <- gsub(parsetting, pattern = " ", replacement = "")
   parsetting_folder <- file.path(data_folder, parsetting)

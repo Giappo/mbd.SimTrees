@@ -66,11 +66,8 @@ plot_taxa_and_mbness <- function(
       q_values <- unique(df0$q)
       q_labels <- paste0("q==", q_values) # what you show
       names(q_labels) <- q_values # what's in the df
-      # nu+q
-      # df1$nu_q <- interaction(df1$nu, df1$q, sep = ",")
       df0$nu_q <- interaction(df0$nu, df0$q, sep = ",")
       nu_q_values <- unique(df0$nu_q)
-      # nu_q_matrix <- expand.grid(q = q_values, nu = nu_values)
       nu_q_matrix <- expand.grid(nu = nu_values, q = q_values)
       nu_q_labels <- apply(
         nu_q_matrix,
@@ -84,8 +81,6 @@ plot_taxa_and_mbness <- function(
       for (b in seq_along(names(pippo))) {
         baudo <- names(pippo)[b]
         pippobaudo <- pippo[[baudo]]
-        # print(b)
-        # print(length(unique(pippobaudo$x)))
         if (length(unique(pippobaudo$x)) == 1) {
           pippo[[baudo]]$x[1] <- max(df0$x)
           xx[b] <- max(pippo[[baudo]]$x[1])
@@ -112,11 +107,8 @@ plot_taxa_and_mbness <- function(
           data = df1,
           bins = bins
         ) +
-        # ggplot2::facet_grid(
         ggplot2::facet_wrap(
           nu ~ q,
-          # . ~ nu_q,
-          # nu_q ~ .,
           labeller = ggplot2::labeller(
             mu = ggplot2::as_labeller(mu_labels, ggplot2::label_parsed),
             nu = ggplot2::as_labeller(nu_labels, ggplot2::label_parsed),
@@ -127,14 +119,11 @@ plot_taxa_and_mbness <- function(
           scales = scales,
           ncol = length(q_values)
         ) + ggplot2::theme(
-          strip.placement = "outside"#,
-          # axis.title.x = ggplot2::element_text(variable)
+          strip.placement = "outside"
         ) +
-        # ggplot2::ggtitle(paste0(variable, " plots for mu = ", mu)) +
         ggplot2::ggtitle(
           label = paste0("Crown age = ", crown_age),
           subtitle = paste0(
-            # bquote(mu ~ " = " ~ .(mu)),
             "lambda = ", df1$lambda,
             ", ",
             "mu = ", mu,
@@ -144,10 +133,19 @@ plot_taxa_and_mbness <- function(
         ) +
         ggplot2::xlab(variable) +
         ggplot2::theme_bw()
-        # ggplot2::coord_cartesian(xlim = c(0, quantile(df1$x, 0.95)))
       plots[[jj]] <- plot
+      if (variable == "n_taxas") {
+        variable_name <- "taxa"
+      }
+      if (variable == "n_mb_species") {
+        variable_name <- "n_mb"
+      }
+      if (variable == "percentage_mb_species") {
+        variable_name <- "p_mb"
+      }
+      variable_name <-
       plot_filename <- paste0(
-        variable, "_plots-mu=", mu,
+        variable_name, "_", mu,
         ".png"
       )
       if (saveit == TRUE) {
@@ -161,14 +159,5 @@ plot_taxa_and_mbness <- function(
       jj <- jj + 1
     }
   }
-  # ggplot2::scale_x_continuous(
-  #   breaks = round(
-  #     seq(min(df1$x), top_x, length.out = 5)
-  #     , digits = 2
-  #   )
-  # ) +
-  # ggplot2::coord_cartesian(xlim = c(0, top_x)) +
-  # ggplot2::theme(axis.text = ggplot2::element_text(size = fontsize)) +
-  # ggplot2::xlab(label = variable)
   plots
 }
