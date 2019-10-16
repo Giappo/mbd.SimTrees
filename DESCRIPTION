@@ -18,7 +18,6 @@ Imports:
   mbd,
   peregrine (>= 0.5),
   pirouette (>= 1.5.1),
-  razzo,
   testit
 Suggests:
   babette,
