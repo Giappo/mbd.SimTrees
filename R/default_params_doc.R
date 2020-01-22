@@ -14,6 +14,7 @@
 #' @param qs per-species speciation probability in case of occurrance of
 #' @param saveit do you want to save it?
 #' @param seed a random number generator seed
+#' @param var a variable
 #' @param verbose give more output
 #' @author Documentation by Giovanni Laudanno.
 #' @note This is an internal function, so it should be marked with
@@ -35,6 +36,7 @@ default_params_doc <- function(
   qs,
   saveit,
   seed,
+  var,
   verbose
 ) {
   # Nothing

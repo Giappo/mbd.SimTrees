@@ -47,7 +47,7 @@ measure_taxa_and_mbness <- function(
     n_replicates = n_replicates
   )
   params_table$crown_age <- crown_age
-  params_table <- params_table %>% dplyr::distinct()
+  params_table <- dplyr::distinct(params_table)
   percentage_mb_species <- n_mb_species <- n_taxas <- rep(NA, nrow(params_table))
   for (m in 1:nrow(params_table)) {
     pars <- params_table[m, ]

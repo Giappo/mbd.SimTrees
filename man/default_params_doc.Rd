@@ -6,7 +6,7 @@
 documentation.}
 \usage{
 default_params_doc(bins, cond, crown_age, lambda, lambdas, mu, mus,
-  n_replicates, nu, nus, q, qs, saveit, seed, verbose)
+  n_replicates, nu, nus, q, qs, saveit, seed, var, verbose)
 }
 \arguments{
 \item{bins}{number of bins}
@@ -36,6 +36,8 @@ default_params_doc(bins, cond, crown_age, lambda, lambdas, mu, mus,
 \item{saveit}{do you want to save it?}
 
 \item{seed}{a random number generator seed}
+
+\item{var}{a variable}
 
 \item{verbose}{give more output}
 }

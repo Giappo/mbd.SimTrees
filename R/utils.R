@@ -1,32 +1,39 @@
+#' Get the name for this package
 #' @export
 get_pkg_name <- function() {
   pkg_name <- "mbd.SimTrees"
   pkg_name
 }
 
+#' Get the path for this package
 #' @export
 get_pkg_path <- function() {
   list.files(getwd())
 }
 
+#' Maximum accepted number of taxa
 #' @export
 max_n_taxa <- function() {
   max_n <- 400
   max_n
 }
 
+#' Miminum accepted number of taxa
 #' @export
 min_n_taxa <- function() {
   min_n <- 5
   min_n
 }
 
+#' Minimum accepted amount of mbness
 #' @export
 min_mbness <- function() {
   min_mbness <- 0.5
   min_mbness
 }
 
+#' Transform to string removing blank spaces
+#' @inheritParams default_params_doc
 #' @export
 to_string2 <- function(
   var
@@ -34,6 +41,8 @@ to_string2 <- function(
   gsub(x = toString(var), pattern = " ", replacement = "")
 }
 
+#' get the full filename
+#' @inheritParams default_params_doc
 #' @export
 get_full_filename <- function(
   lambdas = c(0.2),

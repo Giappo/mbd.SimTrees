@@ -41,7 +41,7 @@ plot_taxa_and_mbness <- function(
   for (variable in variables) {
     df$x <- df[[variable]]
     setting <- NULL; rm(setting)
-    df2 <- df %>% dplyr::group_by(setting)
+    df2 <- dplyr::group_by(.data = df, setting)
     z <- lapply(
       split(df2, f = df2$setting, drop = T),
       FUN = function(y) length(unique(y$x))
