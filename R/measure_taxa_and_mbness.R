@@ -29,7 +29,7 @@ measure_taxa_and_mbness <- function(
     load(full_filename)
     prev_n_replicates <- sum(measure$setting == measure$setting[1])
     if (prev_n_replicates >= n_replicates) {
-      return()
+      return(measure)
     } else {
       file.remove(full_filename)
       rm(measure)
