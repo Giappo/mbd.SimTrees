@@ -17,7 +17,7 @@ measure_taxa_and_mbness <- function(
 
   measure <- NULL; rm(measure)
 
-  full_filename <- get_full_filename(
+  full_filename <- mbd.SimTrees::get_full_filename(
     lambdas = lambdas,
     mus = mus,
     nus = nus,
@@ -37,7 +37,7 @@ measure_taxa_and_mbness <- function(
   }
 
   n_0 <- 2
-  params_table <- create_params_table(
+  params_table <- mbd.SimTrees::create_params_table(
     lambdas = lambdas,
     mus = mus,
     nus = nus,

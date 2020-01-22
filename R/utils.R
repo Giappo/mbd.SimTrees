@@ -1,40 +1,40 @@
-#' @noRd
+#' @export
 get_pkg_name <- function() {
   pkg_name <- "mbd.SimTrees"
   pkg_name
 }
 
-#' @noRd
+#' @export
 get_pkg_path <- function() {
   list.files(getwd())
 }
 
-#' @noRd
+#' @export
 max_n_taxa <- function() {
   max_n <- 400
   max_n
 }
 
-#' @noRd
+#' @export
 min_n_taxa <- function() {
   min_n <- 5
   min_n
 }
 
-#' @noRd
+#' @export
 min_mbness <- function() {
   min_mbness <- 0.5
   min_mbness
 }
 
-#' @noRd
+#' @export
 to_string2 <- function(
   var
 ) {
   gsub(x = toString(var), pattern = " ", replacement = "")
 }
 
-#' @noRd
+#' @export
 get_full_filename <- function(
   lambdas = c(0.2),
   mus = c(0, 0.1),

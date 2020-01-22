@@ -14,7 +14,7 @@ run_all <- function(
   bins = 15,
   saveit = TRUE
 ) {
-  measure_taxa_and_mbness(
+  mbd.SimTrees::measure_taxa_and_mbness(
     lambdas = lambdas,
     mus = mus,
     nus = nus,

@@ -16,7 +16,7 @@ analyze_taxa_and_mbness <- function(
   quantile <- NULL; rm(quantile)
   x <- NULL; rm(x)
 
-  full_filename <- get_full_filename(
+  full_filename <- mbd.SimTrees::get_full_filename(
     lambdas = lambdas,
     mus = mus,
     nus = nus,
@@ -34,16 +34,22 @@ analyze_taxa_and_mbness <- function(
   limit_n_taxas <- rep(0, length(settings))
   names(limit_n_taxas) <- settings
   median_mbness <- median_n_taxas <- limit_n_taxas
+  quantiles_n_taxas <- vector("list", length(settings))
+  names(quantiles_n_taxas) <- settings
   for (s in seq_along(settings)) {
     setting <- settings[s]
     df1 <- df[df$setting == setting, ]
     median_n_taxas[s] <- median(df1$n_taxas)
     limit_n_taxas[s] <- quantile(df1$n_taxas, max_quant)
     median_mbness[s] <- median(df1$percentage_mb_species)
+    quantiles_n_taxas[[s]] <-
+      # quantile(x = df1$n_taxas, c(0.50 - 0.34, 0.50, 0.50 + 0.34, 0.90))
+      quantile(x = df1$n_taxas, c(0.25, 0.50, 0.75, 0.90))
   }
   list(
     median_n_taxas = median_n_taxas,
     limit_n_taxas = limit_n_taxas,
-    median_mbness = median_mbness
+    median_mbness = median_mbness,
+    quantiles_n_taxas = quantiles_n_taxas
   )
 }
