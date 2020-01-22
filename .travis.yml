@@ -1,6 +1,11 @@
 language: r
 cache: packages
 
+r_github_packages:
+  - Giappo/mbd
+  - richelbilderbeek/pirouette
+  - richelbilderbeek/peregrine
+
 before_install:
   - sudo add-apt-repository -y ppa:opencpu/imagemagick
   - sudo apt-get update
